@@ -8,7 +8,7 @@ const Splash = ({ navigation }) =>{
     useEffect(() =>{
        const timeoutId = setTimeout(() =>{
             navigation.replace('Login');
-        }, 5000);
+        }, 3000);
 
         return () =>
             clearTimeout(timeoutId);
@@ -19,10 +19,11 @@ const Splash = ({ navigation }) =>{
         <View style={styles.container}>
             <LottieView
             style={{width: 200, height: 200}}
-                source={require('../../assets/animations/Animation - 1709653976457.json')}
+                source={require('../../assets/animations/splash.json')}
                 autoPlay
                 loop
             />
+            <Text>SWIFTCUT</Text>
         </View>
     )
 }

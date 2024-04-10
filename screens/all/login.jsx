@@ -19,18 +19,7 @@ const Login = () => {
             fill="#35343D"
             d="M123.704 340.424c-41.033 0-74.296-2.413-74.296-5.388 0-2.976 33.263-5.389 74.296-5.389 41.032 0 74.296 2.413 74.296 5.389 0 2.975-33.264 5.388-74.296 5.388ZM122.459 276.215h2.49v1.572h-2.49v-1.572ZM117.477 276.215h2.491v1.572h-2.491v-1.572ZM112.497 276.215h2.49v1.572h-2.49v-1.572ZM107.516 276.215h2.491v1.572h-2.491v-1.572ZM102.536 276.215h2.49v1.572h-2.49v-1.572ZM97.555 276.215h2.49v1.572h-2.49v-1.572ZM92.574 276.215h2.49v1.572h-2.49v-1.572ZM87.594 276.215h2.49v1.572h-2.49v-1.572ZM82.612 276.215h2.49v1.572h-2.49v-1.572ZM77.632 276.215h2.49v1.572h-2.49v-1.572ZM72.651 276.215h2.49v1.572h-2.49v-1.572Z"
           />
-          <Path
-            fill="#35343D"
-            d="M66.944 277.225c0 8.575 3.148 16.798 8.753 22.86 5.604 6.063 13.206 9.469 21.131 9.469 7.926 0 15.527-3.406 21.132-9.469 5.604-6.062 8.753-14.285 8.753-22.86h-59.77Z"
-          />
-          <Path
-            fill="#35343D"
-            d="m68.389 277.432 19.01-61.299a27.758 27.758 0 0 0-11.568-1.608 28.133 28.133 0 0 0-11.254 3.306c-3.514 1.892-6.65 4.515-9.226 7.718-2.576 3.203-4.544 6.925-5.79 10.951a34.99 34.99 0 0 0-.545 1.956c-1.957 7.943-1.043 16.395 2.556 23.635 3.598 7.241 9.612 12.726 16.817 15.341Z"
-          />
-          <Path
-            fill="#35343D"
-            d="M67.67 282.277c-2.062 0-3.735-1.809-3.735-4.041s1.673-4.041 3.736-4.041 3.735 1.809 3.735 4.041-1.672 4.041-3.735 4.041Z"
-          />
+          
           <Path
             fill="#A62940"
             d="M105.649 285.644c.275 0 .539.119.734.329.194.211.304.496.304.794 0 .298-.11.583-.304.794-.195.21-.459.328-.734.328H87.801a1 1 0 0 1-.734-.328 1.172 1.172 0 0 1-.303-.794c0-.298.109-.583.303-.794.195-.21.459-.329.734-.329h17.848Z"
@@ -146,13 +135,11 @@ const Login = () => {
           await AsyncStorage.setItem('idCarShop', carShopId.toString());
           await AsyncStorage.setItem('customerId', customerId.toString());
         } else {
-          console.error('El token recibido es nulo o no está definido.');
+          console.error("El token recibido es nulo o no está definido");
         }
-
-
         navigation.replace('Index');
       } else {
-        alert('Credenciales incorrectas');
+        alert("Credenciales incorrectas");
       }
     } catch (error) {
       console.error('Error en inicio de sesión:', error);
@@ -168,21 +155,11 @@ const Login = () => {
       <Text style={styles.titulo1}>SWIFTCUT</Text>
       <Text style={styles.subTitulo}>Sabores que Cortan a la Perfección</Text>
       <View style={styles.form}>
-        <TextInput
-          placeholder="alguien@ejemplo.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          style={{ ...styles.input, marginBottom: 20 }}
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          placeholder="password"
-          secureTextEntry
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-        />
+      <TextInput placeholder='nombreusuario@ejemplo.com'
+      keyboardType='email-address' autoCapitalize='none'
+      style={styles.Text} value={email} onChangeText={setEmail}></TextInput>
+        <TextInput placeholder="password" secureTextEntry style={styles.input}
+        value={password} onChangeText={setPassword}></TextInput>
       </View>
       <TouchableOpacity style={styles.buttonRegis} onPress={() => navigation.navigate('Register')}>
         <Text style={styles.textRegis}>Crear cuenta</Text>
@@ -198,6 +175,10 @@ const Login = () => {
 }
 
 const styles = StyleSheet.create({
+  Text:{
+    ...styles.input, 
+    marginBottom: 20
+  },
   containerMain: {
     alignItems: 'center',
     flex: 1,

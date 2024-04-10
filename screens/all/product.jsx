@@ -8,11 +8,11 @@ import { API_URL } from '../../constants/config';
 
 const ProductScreen = ({ route, navigation }) => {
     const { id, name, imageUrl, description, quantity } = route.params;
-    const [carnePrecioFijo, setCarnePrecioFijo] = useState(0);
-    const [options, setOptions] = useState([]);
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [number, setNumber] = useState('1.0');
-    const [idCartShop, setIdCartShop] = useState(null);
+    const [carnePrecio, setCarnePrecio] = useState(0);
+    const [opc, setOpc] = useState([]);
+    const [selectedOpc, setSelectedOpc] = useState(null);
+    const [num, setNum] = useState('1.0');
+    const [idCardShop, setIdCardShop] = useState(null);
     const [totalPrice, setTotalPrice] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -32,7 +32,7 @@ const ProductScreen = ({ route, navigation }) => {
     const fetchCarnePrecioFijo = async () => {
         try {
             const response = await axios.get(`${API_URL}/api/priceKg/readNow`);
-            setCarnePrecioFijo(response.data.data.priceSale);
+            setCarnePrecio(response.data.data.priceSale);
         } catch (error) {
             console.error('Error al obtener el precio fijo de la carne:', error);
         }
@@ -50,7 +50,7 @@ const ProductScreen = ({ route, navigation }) => {
             const responseData = await response.json();
 
             if (responseData.status === "OK") {
-                setOptions(responseData.data);
+                setOpc(responseData.data);
             } else {
                 console.error('Error en la carga de opciones: ', responseData.mensaje);
             }
@@ -63,39 +63,39 @@ const ProductScreen = ({ route, navigation }) => {
         try {
             const id = await AsyncStorage.getItem('idCarShop');
             if (id) {
-                setIdCartShop(id);
+                setIdCardShop(id);
             } else {
-                Alert.alert('Error', 'No se pudo obtener el ID del carrito de la tienda.');
+                Alert.alert("Error", "No se pudo obtener el ID sobre carrito de la tienda...");
             }
         } catch (error) {
-            console.error('Error al obtener el ID del carrito de la tienda: ', error);
+            console.error("Ha ocurrido un error al obtener el ID del carrito de la tienda: ", error);
         }
     };
 
     useEffect(() => {
         calculateTotalPrice();
-    }, [number, selectedOption]);
+    }, [num, selectedOpc]);
 
     const incrementNumber = () => {
         const newNumber = (parseFloat(number) + .5).toFixed(1);
-        setNumber(newNumber.toString());
+        setNum(newNumber.toString());
     };
 
     const decrementNumber = () => {
         const newNumber = (parseFloat(number) - .5).toFixed(1);
         if (newNumber >= 0) {
-            setNumber(newNumber.toString());
+            setNum(newNumber.toString());
         }
     };
 
 
     const handleOptionSelect = (option) => {
-        setSelectedOption(option);
+        setSelectedOpc(option);
     };
 
     const calculateTotalPrice = () => {
-        let basePrice = carnePrecioFijo * parseFloat(number);
-        let optionPrice = selectedOption ? selectedOption.price * parseFloat(number) : 0;
+        let basePrice = carnePrecio * parseFloat(number);
+        let optionPrice = selectedOpc ? selectedOpc.price * parseFloat(number) : 0;
         setTotalPrice(basePrice + optionPrice);
     };
 
@@ -106,11 +106,11 @@ const ProductScreen = ({ route, navigation }) => {
                 return;
             }
 
-            if (selectedOption) {
+            if (selectedOpc) {
                 const productToAdd = {
                     idProductExtra: selectedOption.id,
                     quantity: parseFloat(number),
-                    carId: idCartShop
+                    carId: idCardShop
                 };
                 const response = await fetch(`${API_URL}/api/cardsitems/add`, {
                     method: 'POST',
@@ -134,8 +134,9 @@ const ProductScreen = ({ route, navigation }) => {
     if (isLoading) {
         return (
             <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color={colors.primary} />
-                <Text style={styles.loadingText}>Cargando datos...</Text>
+                <ActivityIndicator size="large" color={colors.grey}>
+                </ActivityIndicator>
+                <Text style={styles.loadingText}>Espere cargando datos... </Text>
             </View>
         );
     }
@@ -151,15 +152,15 @@ const ProductScreen = ({ route, navigation }) => {
                 </View>
                 <View style={styles.optionsContainer}>
                     <Text style={styles.selectLabel}>Preparaciones especiales</Text>
-                    {options.map((option, index) => (
+                    {opc.map((option, index) => (
                         <View style={styles.options} key={index}>
                             <View style={styles.divider} />
                             <TouchableOpacity
-                                style={[styles.optionButton, selectedOption === option]}
+                                style={[styles.optionButton, selectedOpc === option]}
                                 onPress={() => handleOptionSelect(option)}
                             >
                                 <View style={styles.radioButton}>
-                                    {selectedOption === option && styles.selectedOption && <View style={styles.radioButtonInner} />}
+                                    {selectedOpc === option && styles.selectedOption && <View style={styles.radioButtonInner} />}
                                 </View>
                                 <View style={styles.textContainer}>
                                     <View style={styles.titleOptions}>
@@ -175,8 +176,8 @@ const ProductScreen = ({ route, navigation }) => {
             </ScrollView>
             <View style={styles.footer}>
                 <View>
-                    <Text style={styles.basePrice}>Precio de la carne: ${carnePrecioFijo * parseFloat(number)}</Text>
-                    <Text style={styles.optionPrice}>Precio del extra: ${selectedOption ? selectedOption.price * parseFloat(number) : 0}</Text>
+                    <Text style={styles.basePrice}>Precio de la carne: ${carnePrecio * parseFloat(number)}</Text>
+                    <Text style={styles.optionPrice}>Precio del extra: ${selectedOpc ? selectedOpc.price * parseFloat(number) : 0}</Text>
                     <Text style={styles.totalPrice}>Precio total: ${totalPrice ? totalPrice.toFixed(2) : 0}</Text>
                 </View>
                 <View style={styles.Buttons}>
@@ -192,7 +193,7 @@ const ProductScreen = ({ route, navigation }) => {
                                     for (let i = 0; i < text.length; i++) {
                                         newText += text[i];
                                     }
-                                    setNumber(newText);
+                                    setNum(newText);
                                 }}
                                 value={number}
                                 keyboardType="numeric"
