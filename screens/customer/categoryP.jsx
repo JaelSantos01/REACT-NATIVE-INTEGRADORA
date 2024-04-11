@@ -9,16 +9,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../constants/config';
 
 const CategoryP = ({ route }) => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [products, setProducts] = useState([]);
-    const navigation = useNavigation();
-    const { categoryId, categoryName } = route.params;
 
     useEffect(() => {
         fetchProducts();
-    }, [categoryId]);
+    }, [categoriaId]);
 
+    const [buscaQuery, setBuscaQuery] = useState('');
+    const [productos, setProductos] = useState([]);
+    const navigation = useNavigation();
+    const { categoriaId, categoriaName } = route.params;
     const fetchProducts = async () => {
+
         try {
             const token = await AsyncStorage.getItem('token');
             const response = await fetch(`${API_URL}/api/product/readCategoryClient`, {
@@ -27,12 +28,12 @@ const CategoryP = ({ route }) => {
                     'Content-Type': 'application/json',
                     Authorization: token
                 },
-                body: JSON.stringify({ "idCategory": categoryId }),
+                body: JSON.stringify({ "idCategory": categoriaId }),
             });
             const data = await response.json();
-            setProducts(data.data);
+            setProductos(data.data);
         } catch (error) {
-            console.error('Error fetching products:', error);
+            console.error("Error fetching products: ", error);
         }
     };
 
@@ -63,18 +64,18 @@ const CategoryP = ({ route }) => {
                     <TextInput
                         style={styles.input}
                         placeholder="Buscar producto"
-                        value={searchQuery}
-                        onChangeText={text => setSearchQuery(text)}
+                        value={buscaQuery}
+                        onChangeText={text => setBuscaQuery(text)}
                     />
-                    <TouchableOpacity style={styles.searchButton} onPress={() => console.log("Search button pressed")}>
+                    <TouchableOpacity style={styles.searchButton} onPress={() => console.log("El botón de buscar fue presionado")}>
                         <Foundation name="magnifying-glass" size={24} color="black" />
                     </TouchableOpacity>
                 </View>
                 <Categories />
-                <Text style={styles.categoryTitle}>{categoryName}</Text>
+                <Text style={styles.categoryTitle}>{categoriaName}</Text>
                 <View style={styles.categoryContainer}>
                     <FlatList
-                        data={products}
+                        data={productos}
                         keyExtractor={item => item.id.toString()}
                         renderItem={({ item }) => (
                             <MeatCard

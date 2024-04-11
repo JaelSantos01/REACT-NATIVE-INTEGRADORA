@@ -25,11 +25,11 @@ const Record = () => {
         if (data.status === 'OK') {
           setOrdersData(data.data);
         } else {
-          console.error('Error en la respuesta del servidor:', data.error);
+          console.error("Ha ocurrido un erro en la respuesta del servidor: ", data.error);
         }
         setIsLoading(false);
       } catch (error) {
-        console.error('Error al obtener los datos de los pedidos:', error);
+        console.error("Ha ocurrido un error al obtener los datos de los pedidos: ", error);
       }
     };
 
@@ -40,7 +40,7 @@ const Record = () => {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Cargando datos...</Text>
+        <Text style={styles.loadingText}>Espere cargando datos...</Text>
       </View>
     );
   }
@@ -58,11 +58,11 @@ const Record = () => {
           barColor = "#0e9f6e";
           description = item.statusDto.description;
           break;
-        case 'Espera':
+        case 'espera':
           barColor = "#35343D";
           description = item.statusDto.description;
           break;
-        case 'Asignado':
+        case 'asignado':
           barColor = colors.red3;
           description = item.statusDto.description;
           break;
@@ -75,7 +75,7 @@ const Record = () => {
       <TouchableOpacity style={styles.card} onPress={() => handleOrderPress(item.id, item.dateRequest, item.total)}>
         
         <View style={styles.priceBar}>
-        <Text style={styles.text1}>Pedido del:</Text>
+        <Text style={styles.text1}>Pedido:</Text>
         <Text style={styles.text}>{item.dateRequest}</Text>
         </View>
         <View style={styles.priceBar}>

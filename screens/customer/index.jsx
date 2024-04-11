@@ -9,6 +9,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../constants/config';
 
 const IndexScreen = () => {
+
+    const retrieveToken = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+        } catch (error) {
+            console.error('Error al recuperar el token:', error);
+        }
+    };
+
     const [searchQuery, setSearchQuery] = useState('');
     const [meats, setMeats] = useState([]);
     const [filteredMeats, setFilteredMeats] = useState([]);
@@ -20,6 +29,18 @@ const IndexScreen = () => {
         fetchMeatsFromAPI();
         retrieveToken();
     }, []);
+
+    
+    const handleSearchOnSubmit = () => {
+        handleSearch();
+        setSearchQuery('');
+    };
+
+
+    const handleSearch = () => {
+        const filtered = meats.filter(meat => meat.name.toLowerCase().includes(searchQuery.toLowerCase()));
+        setFilteredMeats(filtered);
+    };
 
     const fetchMeatsFromAPI = async () => {
         try {
@@ -41,12 +62,13 @@ const IndexScreen = () => {
                     imageUrl: item.urlPhoto,
                     quantity: item.quantity
                 }));
-                setMeats(formattedData);
-                setFilteredMeats(formattedData);
-
                 const productoMasVendido = formattedData[0];
                 setBestSeller(productoMasVendido);
-                setIsLoading(false); // Cambia el estado de isLoading a falso cuando se completó la carga de datos
+                setIsLoading(false);
+                 // Cambia el estado de isLoading a falso cuando se completó la carga de datos
+                setMeats(formattedData);
+                setFilteredMeats(formattedData);
+                
             } else {
                 console.error('Error en la carga de datos: ', responseData.mensaje);
             }
@@ -55,22 +77,9 @@ const IndexScreen = () => {
         }
     };
 
-    const retrieveToken = async () => {
-        try {
-            const token = await AsyncStorage.getItem('token');
-        } catch (error) {
-            console.error('Error al recuperar el token:', error);
-        }
-    };
 
-    const handleSearch = () => {
-        const filtered = meats.filter(meat => meat.name.toLowerCase().includes(searchQuery.toLowerCase()));
-        setFilteredMeats(filtered);
-    };
-
-    const handleSearchOnSubmit = () => {
-        handleSearch();
-        setSearchQuery('');
+    const handleCardPress = (id, name, imageUrl, description, quantity) => {
+        navigation.navigate('product', { id, name, imageUrl, description, quantity });
     };
 
     const MeatCard = ({ id, name, imageUrl, description, quantity, style, isBestSeller }) => (
@@ -81,22 +90,16 @@ const IndexScreen = () => {
                         <Text style={[styles.name, isBestSeller && styles.bestSellerText]}>{name}</Text>
                     </View>
                     <TouchableOpacity
-                        style={[styles.addButton, isBestSeller && styles.bestSellerButton]}
-                        onPress={() => handleCardPress(id, name, imageUrl, description, quantity)}
-                    >
-                        <FontAwesome6 name="plus" size={18} color="white" />
+                        style={[styles.addButton, isBestSeller && styles.bestSellerButton]} onPress={() => handleCardPress(id, name, imageUrl, description, quantity)}>
+                        
+                        <FontAwesome6 name="plus" size={18} color="white"></FontAwesome6>
                         <Text style={styles.addButtonText}>Comprar</Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
         </TouchableOpacity>
     );
-
-    const handleCardPress = (id, name, imageUrl, description, quantity) => {
-        navigation.navigate('product', { id, name, imageUrl, description, quantity });
-    };
-
-
+    
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
             {isLoading ? ( // Muestra un mensaje de carga mientras isLoading sea verdadero
