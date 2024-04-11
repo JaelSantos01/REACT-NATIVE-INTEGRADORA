@@ -5,9 +5,28 @@ import * as Location from 'expo-location';
 import colors from '../../constants/colors';
 
 const OrderMaps = ({ route, navigation }) => {
+
+  const handleDirections = () => {
+    const origin = `${userLocation.latitude},${userLocation.longitude}`;
+    const destination = `${orderLatitude},${orderLongitude}`;
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+    Linking.openURL(url);
+  };
   const { latitude: orderLatitude, longitude: orderLongitude } = route.params;
   const [userLocation, setUserLocation] = useState(null);
   const mapRef = useRef(null);
+
+  const handleShowUserLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      // Si el usuario no otorga permiso, muestra una alerta y regresa a la pantalla anterior
+      Alert.alert(
+        'Necesitas dar permisos para continuar',
+        'Por favor, otorga permisos de ubicación para continuar.',
+        [{ text: 'OK', onPress: () => navigation.goBack() }]
+      );
+      return;
+    }
 
   // Obtener la ubicación actual del usuario
   useEffect(() => {
@@ -28,17 +47,10 @@ const OrderMaps = ({ route, navigation }) => {
     })();
   }, []);
 
-  const handleShowUserLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      // Si el usuario no otorga permiso, muestra una alerta y regresa a la pantalla anterior
-      Alert.alert(
-        'Necesitas dar permisos para continuar',
-        'Por favor, otorga permisos de ubicación para continuar.',
-        [{ text: 'OK', onPress: () => navigation.goBack() }]
-      );
-      return;
-    }
+
+  const handleDeliverOrder = () => {
+    navigation.navigate('Delivery', { orderLatitude, orderLongitude });
+  };
 
     let location = await Location.getCurrentPositionAsync({});
     setUserLocation(location.coords);
@@ -50,16 +62,6 @@ const OrderMaps = ({ route, navigation }) => {
     });
   };
 
-  const handleDirections = () => {
-    const origin = `${userLocation.latitude},${userLocation.longitude}`;
-    const destination = `${orderLatitude},${orderLongitude}`;
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
-    Linking.openURL(url);
-  };
-
-  const handleDeliverOrder = () => {
-    navigation.navigate('Delivery', { orderLatitude, orderLongitude });
-  };
 
   return (
     <View style={styles.container}>

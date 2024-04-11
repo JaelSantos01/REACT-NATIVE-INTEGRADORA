@@ -5,6 +5,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 const Delivery = () => {
+
+  const handleDelivery = () => {
+    setDeliveryStatus('Entregado');
+    setCommentModalVisible(true);
+    setSelectedMeat(null);
+  };
     const navigation = useNavigation();
     const [selectedMeat, setSelectedMeat] = useState(null);
     const [totalPrice, setTotalPrice] = useState(0);
@@ -12,36 +18,14 @@ const Delivery = () => {
     const [comments, setComments] = useState('');
     const [deliveryStatus, setDeliveryStatus] = useState(''); 
     
-    const handleCloseModal = () => {
-      setCommentModalVisible(false);
-      setComments('');
-    };
 
     const meats = [
-      { id: '1', name: 'Filete de cerdo', price: 10, imageUrl: 'https://ensalpicadas.com/wp-content/uploads/2022/06/Filete-de-Cerdo-Jugoso-5.jpg'},
-      { id: '2', name: 'Costillas de cerdo', price: 10, imageUrl: 'https://carnivalmeatlab.com/wp-content/uploads/2021/06/Costillas-de-cerdo-SIN-NOMBRE.jpg'},
-      { id: '3', name: 'Cabeza de cerdo', price: 10, imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/5d/Cabezadecerdo-04614.jpg'},
-      { id: '4', name: 'Chuletas de cerdo', price: 10, imageUrl: 'https://espanol.kingsford.com/wp-content/uploads/2017/02/KFD_CiderBrinedPorkChopswithBrownSugarApplewoodBBQSauce35335_WEB.jpg'},
-      { id: '5', name: 'Carne molida de cerdo', price: 10, imageUrl: 'https://carnesrikatas.com/wp-content/uploads/2023/03/molida-de-cerdo-min-convert.io-1.webp'},
+      { id: '1', name: 'Filete de cerdo', price: 10, imageUrl: 'https://th.bing.com/th/id/OIP.6zek1LsRR4lGCi5RUmH1EgHaFV?rs=1&pid=ImgDetMain'},
+      { id: '2', name: 'Costillas de cerdo', price: 10, imageUrl: 'https://saludprimero.mx/wp-content/uploads/2020/01/carne-cerdo.jpg'},
+      { id: '3', name: 'Cabeza de cerdo', price: 10, imageUrl: 'https://th.bing.com/th/id/R.3ae09b8696322fb5fa2f5c1a3bc4df9a?rik=qZxrZFzlmafk1g&pid=ImgRaw&r=0'},
+      { id: '4', name: 'Chuletas de cerdo', price: 10, imageUrl: 'https://th.bing.com/th/id/OIP.wbpOPAPa12yuw4XIug8CuAHaEK?rs=1&pid=ImgDetMain'},
+      { id: '5', name: 'Carne molida de cerdo', price: 10, imageUrl: 'https://th.bing.com/th/id/OIP.wbpOPAPa12yuw4XIug8CuAHaEK?rs=1&pid=ImgDetMain'},
     ];
-
-    useEffect(() => {
-      if (meats.length > 0) {
-        const total = meats.reduce((acc, meat) => acc + meat.price, 0);
-        setTotalPrice(total);
-      }
-    }, [meats]);
-
-    const handleDelivery = () => {
-      setDeliveryStatus('Entregado');
-      setCommentModalVisible(true);
-      setSelectedMeat(null);
-    };
-
-    const handleReject = () => {
-      setDeliveryStatus('Rechazado');
-      setCommentModalVisible(true);
-    };
 
     const handleSubmitComments = () => {
       console.log('Comentarios enviados:', comments);
@@ -50,6 +34,24 @@ const Delivery = () => {
       setCommentModalVisible(false);
       setComments('');
     };
+
+    useEffect(() => {
+      if (meats.length > 0) {
+        const total = meats.reduce((acc, meat) => acc + meat.price, 0);
+        setTotalPrice(total);
+      }
+    }, [meats]);
+
+    const handleCloseModal = () => {
+      setCommentModalVisible(false);
+      setComments('');
+    };
+
+    const handleReject = () => {
+      setDeliveryStatus('Rechazado');
+      setCommentModalVisible(true);
+    };
+
 
     return (
       <View style={styles.container}>
@@ -69,18 +71,6 @@ const Delivery = () => {
           keyExtractor={(item) => item.id}
         />
 
-        <View style={styles.footer}>
-          <Text style={styles.totalPrice}>Total: ${totalPrice.toFixed(2)}</Text>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.deliveryButton} onPress={handleDelivery}>
-              <Text style={styles.deliveryButtonText}>Entregar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.rejectButton} onPress={handleReject}>
-              <Text style={styles.rejectButtonText}>Rechazar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
         <Modal visible={commentModalVisible} transparent={true} animationType="fade">
           <View style={styles.modalContainer}>
             <View style={styles.commentModal}>
@@ -98,6 +88,18 @@ const Delivery = () => {
             </View>
           </View>
         </Modal>
+
+        <View style={styles.footer}>
+          <Text style={styles.totalPrice}>Total: ${totalPrice.toFixed(2)}</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.deliveryButton} onPress={handleDelivery}>
+              <Text style={styles.deliveryButtonText}>Entregar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.rejectButton} onPress={handleReject}>
+              <Text style={styles.rejectButtonText}>Rechazar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     );
 };

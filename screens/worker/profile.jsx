@@ -4,6 +4,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const Profile = () => {
+    // Estado para almacenar los datos del usuario y sus cambios
+    const [userData, setUserData] = useState({
+      email: 'a',
+      password: '12345',
+      phoneNumber: '1234567890',
+    });
   const navigation = useNavigation();
 
   const handleLogout = () => {
@@ -12,27 +18,18 @@ const Profile = () => {
       routes: [{ name: 'Login' }],
     });
   };
-  // Estado para almacenar los datos del usuario y sus cambios
-  const [userData, setUserData] = useState({
-    email: 'a',
-    password: '12345',
-    phoneNumber: '1234567890',
-  });
-
-  // Función para manejar el cambio en el correo electrónico
-  const handleChangeEmail = (text) => {
-    setUserData((prevState) => ({ ...prevState, email: text }));
-  };
-
-  // Función para manejar el cambio en la contraseña
-  const handleChangePassword = (text) => {
-    setUserData((prevState) => ({ ...prevState, password: text }));
-  };
 
   // Función para manejar el cambio en el número de teléfono
   const handleChangePhoneNumber = (text) => {
     setUserData((prevState) => ({ ...prevState, phoneNumber: text }));
   };
+  
+  // Función para manejar el cambio en la contraseña
+  const handleChangePassword = (text) => {
+    setUserData((prevState) => ({ ...prevState, password: text }));
+  };
+
+
 
   // Función para guardar los cambios en los datos del usuario
   const handleSaveChanges = () => {
@@ -40,21 +37,17 @@ const Profile = () => {
     console.log('Datos actualizados:', userData);
   };
 
+  
+  // Función para manejar el cambio en el correo electrónico
+  const handleChangeEmail = (text) => {
+    setUserData((prevState) => ({ ...prevState, email: text }));
+  };
+
   return (
     <View style={styles.container}>
       <MaterialIcons name="person" size={180} color="black" marginVertical={50} />
-      {/* Campo de correo electrónico */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Correo electrónico:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Correo electrónico"
-          value={userData.email}
-          onChangeText={handleChangeEmail}
-        />
-      </View>
-      {/* Campo de contraseña */}
-      <View style={styles.inputContainer}>
+            {/* Campo de contraseña */}
+            <View style={styles.inputContainer}>
         <Text style={styles.label}>Contraseña:</Text>
         <TextInput
           style={styles.input}
@@ -64,6 +57,7 @@ const Profile = () => {
           onChangeText={handleChangePassword}
         />
       </View>
+
       {/* Campo de número de teléfono */}
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Número de teléfono:</Text>
@@ -73,6 +67,16 @@ const Profile = () => {
           keyboardType="numeric"
           value={userData.phoneNumber}
           onChangeText={handleChangePhoneNumber}
+        />
+      </View>
+            {/* Campo de correo electrónico */}
+            <View style={styles.inputContainer}>
+        <Text style={styles.label}>Correo electrónico:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Correo electrónico"
+          value={userData.email}
+          onChangeText={handleChangeEmail}
         />
       </View>
       {/* Botones para guardar los cambios y cerrar sesión en línea */}
